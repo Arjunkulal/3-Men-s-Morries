@@ -1,3 +1,9 @@
+
+
+
+
+
+/* Basic styles for body and container */
 body {
     display: flex;
     justify-content: center;
@@ -12,6 +18,7 @@ body {
     text-align: center;
 }
 
+/* Game board styling */
 .board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
@@ -20,6 +27,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Individual cell styling */
 .cell {
     width: 100px;
     height: 100px;
@@ -33,14 +41,18 @@ body {
     user-select: none;
 }
 
+/* Hover effect for cells */
 .cell:hover {
     background-color: #a79e9e;
 }
 
+/* Styling for game info section */
 .game-info {
-    font-size: 18px;
+    font-size: 18px;
 }
-#button{
+
+/* Button styling */
+#button {
     background-color: blue;
     color: white;
     padding: 10px 20px;
@@ -48,9 +60,127 @@ body {
     border-radius: 5px;
     font-size: 15px;
     cursor: pointer;
-
 }
 
-#button:hover{
+/* Button hover effect */
+#button:hover {
     background-color: red;
+}
+
+/* Selected piece styling */
+.selected {
+    background-color: #f1c40f; /* A gold color to highlight */
+    border: 2px solid #e67e22; /* Orange border for emphasis */
+}
+
+/* Winner Modal Styles */
+.winner-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.winner-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.winner-content h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #2ecc71;
+}
+
+#winnerModal button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#winnerModal button:hover {
+    background-color: #2980b9;
+}
+
+/* Fade-in animation for the modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Media Query for Mobile and Small Devices */
+@media (max-width: 600px) {
+    .board {
+        grid-template-columns: repeat(3, 80px); /* Smaller cells for mobile */
+        grid-template-rows: repeat(3, 80px); /* Smaller cells for mobile */
+    }
+
+    .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 18px;  /* Smaller font size for mobile */
+    }
+
+    .game-info {
+        font-size: 16px; /* Smaller font size for mobile */
+    }
+
+    #button {
+        font-size: 14px;  /* Smaller font size for mobile */
+        padding: 12px 24px; /* Adjust padding */
+    }
+
+    .winner-content h2 {
+        font-size: 28px; /* Smaller winner title */
+    }
+
+    #winnerModal button {
+        font-size: 14px; /* Smaller button font */
+    }
+
+    .container {
+        width: 95%; /* Use more space on mobile */
+        max-width: 400px; /* Prevent stretching too much */
+    }
+}
+
+/* Larger screens - if you want to increase the layout for tablets or larger mobile screens */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .board {
+        grid-template-columns: repeat(3, 100px); /* Adjust the size of cells */
+        grid-template-rows: repeat(3, 100px); /* Adjust size */
+    }
+
+    .cell {
+        width: 100px;
+        height: 100px;
+    }
+
+    #button {
+        font-size: 16px; /* Increase font size for tablets */
+        padding: 15px 30px; /* Larger button for tablet-sized screens */
+    }
+
+    .winner-content h2 {
+        font-size: 32px; /* Adjust winner font size */
+    }
 }
