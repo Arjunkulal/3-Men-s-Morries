@@ -1,11 +1,17 @@
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const cells = document.querySelectorAll(".cell");
     const currentPlayerDisplay = document.getElementById("currentPlayer");
+    const winnerModal = document.getElementById("winnerModal");
+    const winnerMessage = document.getElementById("winnerMessage");
+    const restartButton = document.getElementById("restartButton");
+
     let board = Array(9).fill(null);
     let currentPlayer = "X";
     let moves = { X: 3, O: 3 };
     let phase = "placing";
-    let selectedPieceIndex = null; // To track the selected piece for movement
+    let selectedPieceIndex = null; // Track the selected piece for moving
 
     const winningCombinations = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -22,14 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function handleClick(event) {
         const index = event.target.dataset.index;
 
+        // If it's the placing phase
         if (phase === "placing") {
             if (!board[index]) {
                 board[index] = currentPlayer;
                 event.target.textContent = currentPlayer;
                 moves[currentPlayer]--;
                 if (checkWinner(currentPlayer)) {
-                    alert(`Player ${currentPlayer} wins!`);
-                    resetGame();
+                    winnerMessage.textContent = `Player ${currentPlayer} Wins! 🎉`; // Winner message
+                    winnerModal.style.display = "flex"; // Show winner modal
                     return;
                 }
                 if (moves.X === 0 && moves.O === 0) {
@@ -38,32 +45,45 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 currentPlayerDisplay.textContent = currentPlayer;
             }
-        } else if (phase === "moving") {
+        } 
+
+        // If it's the moving phase, allow selecting a piece
+        else if (phase === "moving") {
             if (board[index] === currentPlayer) {
-                // Start moving a piece
-                selectedPieceIndex = index; // Store the index of the selected piece
-                phase = "placingMove";
+                // If the player selects a piece, highlight it
+                if (selectedPieceIndex !== null) {
+                    // Remove highlight from previously selected piece
+                    cells[selectedPieceIndex].classList.remove('selected');
+                }
+                selectedPieceIndex = index; // Track the selected piece
+                event.target.classList.add('selected'); // Highlight the selected piece
+                phase = "placingMove"; // Transition to the move phase
             }
-        } else if (phase === "placingMove") {
+        } 
+
+        // If it's the placingMove phase, allow placing the piece in a new cell
+        else if (phase === "placingMove") {
+            // Ensure the player is not moving the piece back to the same spot
             if (!board[index] && index !== selectedPieceIndex) {
-                // Ensure the selected piece is moved to a different, empty spot
                 board[index] = currentPlayer;
-                board[selectedPieceIndex] = null; // Remove the piece from the original spot
+                board[selectedPieceIndex] = null; // Clear the original position
                 event.target.textContent = currentPlayer;
                 cells[selectedPieceIndex].textContent = ""; // Clear the original cell
 
+                // Remove highlight from the selected cell after the move
+                cells[selectedPieceIndex].classList.remove('selected');
+                selectedPieceIndex = null; // Reset selected piece
+
                 if (checkWinner(currentPlayer)) {
-                    alert(`Player ${currentPlayer} wins!`);
-                    resetGame();
+                    winnerMessage.textContent = `Player ${currentPlayer} Wins! 🎉`; // Winner message
+                    winnerModal.style.display = "flex"; // Show winner modal
                     return;
                 }
 
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 currentPlayerDisplay.textContent = currentPlayer;
 
-                // Reset to "moving" phase after placing the piece
-                phase = "moving";
-                selectedPieceIndex = null; // Reset the selected piece index
+                phase = "moving"; // Go back to the moving phase
             }
         }
     }
@@ -74,8 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
         phase = "placing";
         currentPlayer = "X";
         currentPlayerDisplay.textContent = currentPlayer;
-        cells.forEach(cell => (cell.textContent = ""));
+        cells.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove('selected'); // Remove selection highlight
+        });
+        winnerModal.style.display = "none"; // Hide winner modal
     }
 
     cells.forEach(cell => cell.addEventListener("click", handleClick));
 });
+
