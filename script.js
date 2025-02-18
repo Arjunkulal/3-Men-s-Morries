@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPlayer = "X";
     let moves = { X: 3, O: 3 };
     let phase = "placing";
+    let selectedPieceIndex = null; // To track the selected piece for movement
 
     const winningCombinations = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleClick(event) {
         const index = event.target.dataset.index;
+
         if (phase === "placing") {
             if (!board[index]) {
                 board[index] = currentPlayer;
@@ -38,22 +40,30 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else if (phase === "moving") {
             if (board[index] === currentPlayer) {
-                board[index] = null;
-                event.target.textContent = "";
+                // Start moving a piece
+                selectedPieceIndex = index; // Store the index of the selected piece
                 phase = "placingMove";
             }
         } else if (phase === "placingMove") {
-            if (!board[index]) {
+            if (!board[index] && index !== selectedPieceIndex) {
+                // Ensure the selected piece is moved to a different, empty spot
                 board[index] = currentPlayer;
+                board[selectedPieceIndex] = null; // Remove the piece from the original spot
                 event.target.textContent = currentPlayer;
+                cells[selectedPieceIndex].textContent = ""; // Clear the original cell
+
                 if (checkWinner(currentPlayer)) {
                     alert(`Player ${currentPlayer} wins!`);
                     resetGame();
                     return;
                 }
+
                 currentPlayer = currentPlayer === "X" ? "O" : "X";
                 currentPlayerDisplay.textContent = currentPlayer;
+
+                // Reset to "moving" phase after placing the piece
                 phase = "moving";
+                selectedPieceIndex = null; // Reset the selected piece index
             }
         }
     }
